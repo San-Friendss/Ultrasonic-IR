@@ -11,6 +11,8 @@
 #include <BlynkSimpleEsp32.h>
 
 #define LED 2
+#define IR_R 36
+#define IR_L 39
 
 // create an Ultrasonic object
 Ultrasonic ultrasonic(16);
@@ -39,7 +41,10 @@ void setup()
 {
     Serial.begin(9600);
     Blynk.begin(BLYNK_AUTH_TOKEN_Ultrasonic_IR, ssid, pass, "blynk.iot-cm.com", 8080); // Blynk                                                             // Stop the car
+    pinMode(IR_R, INPUT);                                                // IR Right
+    pinMode(IR_L, INPUT);    
 }
+
 
 void loop()
 {
@@ -47,4 +52,6 @@ void loop()
     RangeInCentimeters = ultrasonic.read(); // get the range from the sensor
 
     bridge.virtualWrite(V5, RangeInCentimeters);
+    bridge.virtualWrite(V6, digitalRead(IR_L));  // send the IR Right to the Blynk app
+    bridge.virtualWrite(V7, digitalRead(IR_R));  // send the IR Left to the Blynk app
 }
