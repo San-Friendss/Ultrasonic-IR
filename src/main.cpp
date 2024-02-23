@@ -51,6 +51,9 @@ void loop()
     Blynk.run();                            // Blynk
     RangeInCentimeters = ultrasonic.read(); // get the range from the sensor
 
+    Serial.print("Range in cm: ");
+    Serial.println(RangeInCentimeters); // print the range in cm
+
     bridge.virtualWrite(V5, RangeInCentimeters);
     bridge.virtualWrite(V6, digitalRead(IR_L));  // send the IR Right to the Blynk app
     bridge.virtualWrite(V7, digitalRead(IR_R));  // send the IR Left to the Blynk app
