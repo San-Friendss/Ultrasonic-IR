@@ -13,9 +13,11 @@
 #define LED 2
 #define IR_R 36
 #define IR_L 39
+#define PingPin 13
+#define InPin 12
 
 // create an Ultrasonic object
-Ultrasonic ultrasonic(16);
+// Ultrasonic ultrasonic(16);
 
 // variable to store the range in cm
 long RangeInCentimeters, leftDistance, rightDistance;
@@ -37,6 +39,13 @@ BLYNK_CONNECTED()
     digitalWrite(LED, HIGH);
 }
 
+long microsecondsToCentimeters( long microseconds)
+{
+    // The speed of sound is 340 m/s or 29 microseconds per centimeter.
+    // The ping travels out and back, so to find the distance of the object we take half of the distance travelled.
+    return microseconds / 29 / 2;
+}
+
 void setup()
 {
     Serial.begin(9600);
@@ -49,12 +58,23 @@ void setup()
 void loop()
 {
     Blynk.run();                            // Blynk
-    RangeInCentimeters = ultrasonic.read(); // get the range from the sensor
+    // RangeInCentimeters = ultrasonic.read(); // get the range from the sensor
 
+    long duration, cm;
+    pinMode(PingPin, OUTPUT);
+    digitalWrite(PingPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(PingPin, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(PingPin, LOW);
+    pinMode(InPin, INPUT);
+    duration = pulseIn(InPin, HIGH);
+    cm = microsecondsToCentimeters(duration);
     Serial.print("Range in cm: ");
-    Serial.println(RangeInCentimeters); // print the range in cm
+    Serial.println(cm); // print the range in cm
+    delay(100);
 
-    bridge.virtualWrite(V5, RangeInCentimeters);
+    bridge.virtualWrite(V5, cm);
     bridge.virtualWrite(V6, digitalRead(IR_L));  // send the IR Right to the Blynk app
     bridge.virtualWrite(V7, digitalRead(IR_R));  // send the IR Left to the Blynk app
 }
