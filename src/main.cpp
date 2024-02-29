@@ -74,6 +74,26 @@ void loop()
     Serial.println(cm); // print the range in cm
     delay(100);
 
+    WidgetLED led1(V0); // IR Left LED
+    if (digitalRead(IR_L) == 0)
+    {
+        led1.on();
+    }
+    else
+    {
+        led1.off();
+    }
+
+    WidgetLED led2(V1); // IR Right LED
+    if (digitalRead(IR_R) == 0)
+    {
+        led2.on();
+    }
+    else
+    {
+        led2.off();
+    }
+
     bridge.virtualWrite(V5, cm);
     bridge.virtualWrite(V6, digitalRead(IR_L));  // send the IR Right to the Blynk app
     bridge.virtualWrite(V7, digitalRead(IR_R));  // send the IR Left to the Blynk app
