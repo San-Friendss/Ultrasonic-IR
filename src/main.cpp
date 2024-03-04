@@ -16,9 +16,6 @@
 #define PingPin 13
 #define InPin 12
 
-// create an Ultrasonic object
-// Ultrasonic ultrasonic(16);
-
 // variable to store the range in cm
 long RangeInCentimeters, leftDistance, rightDistance;
 
@@ -39,7 +36,7 @@ BLYNK_CONNECTED()
     digitalWrite(LED, HIGH);
 }
 
-long microsecondsToCentimeters( long microseconds)
+long microsecondsToCentimeters(long microseconds)
 {
     // The speed of sound is 340 m/s or 29 microseconds per centimeter.
     // The ping travels out and back, so to find the distance of the object we take half of the distance travelled.
@@ -50,15 +47,13 @@ void setup()
 {
     Serial.begin(9600);
     Blynk.begin(BLYNK_AUTH_TOKEN_Ultrasonic_IR, ssid, pass, "blynk.iot-cm.com", 8080); // Blynk                                                             // Stop the car
-    pinMode(IR_R, INPUT);                                                // IR Right
-    pinMode(IR_L, INPUT);    
+    pinMode(IR_R, INPUT);                                                              // IR Right
+    pinMode(IR_L, INPUT);
 }
-
 
 void loop()
 {
-    Blynk.run();                            // Blynk
-    // RangeInCentimeters = ultrasonic.read(); // get the range from the sensor
+    Blynk.run(); // Blynk
 
     long duration, cm;
     pinMode(PingPin, OUTPUT);
@@ -95,6 +90,6 @@ void loop()
     }
 
     bridge.virtualWrite(V5, cm);
-    bridge.virtualWrite(V6, digitalRead(IR_L));  // send the IR Right to the Blynk app
-    bridge.virtualWrite(V7, digitalRead(IR_R));  // send the IR Left to the Blynk app
+    bridge.virtualWrite(V6, digitalRead(IR_L)); // send the IR Right to the Blynk app
+    bridge.virtualWrite(V7, digitalRead(IR_R)); // send the IR Left to the Blynk app
 }
